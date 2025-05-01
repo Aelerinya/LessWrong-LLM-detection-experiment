@@ -18,6 +18,12 @@ st.title("LessWrong Post Analysis Results")
 def load_data():
     # Load the JSON files
     results_dir = Path("results")
+    if not results_dir.exists():
+        results_dir = Path("step_3_check_APIs/results")
+        if not results_dir.exists():
+            raise FileNotFoundError(
+                f"Results directory not found at {results_dir} or step_3_check_APIs/results"
+            )
 
     with open(results_dir / "accepted_posts_analysis_sapling.json", "r") as f:
         accepted_data = json.load(f)
