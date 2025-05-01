@@ -57,6 +57,7 @@ RETRY_DELAY = 5  # seconds
 def requests_retry_session(
     retries=3,
     backoff_factor=0.3,
+    backoff_max=120,
     status_forcelist=(500, 502, 504),
     session=None,
 ):
@@ -66,7 +67,11 @@ def requests_retry_session(
         read=retries,
         connect=retries,
         backoff_factor=backoff_factor,
+        backoff_max=backoff_max,
         status_forcelist=status_forcelist,
+        backoff_jitter=0.5,
+        respect_retry_after_header=True,
+        allowed_methods=None,
     )
     adapter = HTTPAdapter(max_retries=retry)
     session.mount("http://", adapter)
@@ -82,7 +87,12 @@ def analyze_text_sapling(text: str) -> Dict[str, Any]:
 
     data = {"key": SAPLING_API_KEY, "text": text, "sent_scores": True}
 
-    session = requests_retry_session()
+    session = requests_retry_session(
+        retries=10,
+        backoff_factor=5,
+        backoff_max=300,
+        status_forcelist=(500, 502, 504, 429),
+    )
     try:
         response = session.post(SAPLING_API_URL, headers=headers, json=data)
         response.raise_for_status()
@@ -204,7 +214,7 @@ def main():
         "raw_data/accepted_posts.json",
         f"step_3_check_APIs/results/accepted_posts_analysis_{DETECTOR_API}.json",
         "accepted",
-        limit=10,
+        limit=50,
     )
 
     # Process LLM rejected posts
@@ -212,7 +222,7 @@ def main():
         "step_0_data_processing/llm_rejected_posts.json",
         f"step_3_check_APIs/results/llm_rejected_posts_analysis_{DETECTOR_API}.json",
         "llm_rejected",
-        limit=10,
+        limit=50,
     )
 
     # Process other rejected posts
@@ -220,7 +230,7 @@ def main():
         "step_0_data_processing/other_rejected_posts.json",
         f"step_3_check_APIs/results/other_rejected_posts_analysis_{DETECTOR_API}.json",
         "other_rejected",
-        limit=10,
+        limit=50,
     )
 
 
