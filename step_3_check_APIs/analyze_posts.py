@@ -106,6 +106,9 @@ def analyze_text_sapling(text: str) -> Dict[str, Any]:
         "Content-Type": "application/json",
     }
 
+    # Some articles are too long
+    text = text[:10000]
+
     data = {"key": SAPLING_API_KEY, "text": text, "sent_scores": True}
 
     session = requests_retry_session(
@@ -178,7 +181,7 @@ def analyze_text_copyleaks(text: str, post_url: str) -> Dict[str, Any]:
 
         # Create and configure the document
         document = NaturalLanguageDocument(text)
-        document.set_sandbox(True)  # Use sandbox mode for testing
+        # document.set_sandbox(True)  # Use sandbox mode for testing
 
         # Submit for analysis
         response = Copyleaks.AiDetectionClient.submit_natural_language(
