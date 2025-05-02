@@ -117,7 +117,11 @@ def analyze_text_sapling(text: str) -> Dict[str, Any]:
 
     data = {"key": SAPLING_API_KEY, "text": text, "sent_scores": True}
 
-    session = requests_retry_session()
+    session = requests_retry_session(
+        retries=5,
+        backoff_factor=2,
+        backoff_max=240,
+    )
     try:
         response = session.post(SAPLING_API_URL, headers=headers, json=data)
         response.raise_for_status()
@@ -274,12 +278,12 @@ def main():
     os.makedirs("step_3_check_APIs/results", exist_ok=True)
 
     # Process accepted posts
-    process_posts(
-        "raw_data/accepted_posts.json",
-        f"step_3_check_APIs/results/accepted_posts_analysis_{DETECTOR_API}.json",
-        "accepted",
-        limit=args.limit,
-    )
+    # process_posts(
+    #     "raw_data/accepted_posts.json",
+    #     f"step_3_check_APIs/results/accepted_posts_analysis_{DETECTOR_API}.json",
+    #     "accepted",
+    #     limit=args.limit,
+    # )
 
     # Process LLM rejected posts
     process_posts(
