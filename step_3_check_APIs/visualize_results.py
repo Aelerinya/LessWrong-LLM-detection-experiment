@@ -106,9 +106,18 @@ def load_copyleaks_data():
             {
                 "title": item["title"],
                 "link": item["link"],
-                "probability": item["analysis"]["raw_response"]["results"][0]["probability"],
-                "classification": item["analysis"]["raw_response"]["results"][0]["classification"],
-                "classification_text": "Human" if item["analysis"]["raw_response"]["results"][0]["classification"] == 1 else "AI",
+                "probability": item["analysis"]["raw_response"]["results"][0][
+                    "probability"
+                ],
+                "classification": item["analysis"]["raw_response"]["results"][0][
+                    "classification"
+                ],
+                "classification_text": (
+                    "Human"
+                    if item["analysis"]["raw_response"]["results"][0]["classification"]
+                    == 1
+                    else "AI"
+                ),
                 "type": "Accepted",
                 "full_data": item,
             }
@@ -121,9 +130,18 @@ def load_copyleaks_data():
             {
                 "title": item["title"],
                 "link": item["link"],
-                "probability": item["analysis"]["raw_response"]["results"][0]["probability"],
-                "classification": item["analysis"]["raw_response"]["results"][0]["classification"],
-                "classification_text": "Human" if item["analysis"]["raw_response"]["results"][0]["classification"] == 1 else "AI",
+                "probability": item["analysis"]["raw_response"]["results"][0][
+                    "probability"
+                ],
+                "classification": item["analysis"]["raw_response"]["results"][0][
+                    "classification"
+                ],
+                "classification_text": (
+                    "Human"
+                    if item["analysis"]["raw_response"]["results"][0]["classification"]
+                    == 1
+                    else "AI"
+                ),
                 "type": "LLM Rejected",
                 "full_data": item,
             }
@@ -136,9 +154,18 @@ def load_copyleaks_data():
             {
                 "title": item["title"],
                 "link": item["link"],
-                "probability": item["analysis"]["raw_response"]["results"][0]["probability"],
-                "classification": item["analysis"]["raw_response"]["results"][0]["classification"],
-                "classification_text": "Human" if item["analysis"]["raw_response"]["results"][0]["classification"] == 1 else "AI",
+                "probability": item["analysis"]["raw_response"]["results"][0][
+                    "probability"
+                ],
+                "classification": item["analysis"]["raw_response"]["results"][0][
+                    "classification"
+                ],
+                "classification_text": (
+                    "Human"
+                    if item["analysis"]["raw_response"]["results"][0]["classification"]
+                    == 1
+                    else "AI"
+                ),
                 "type": "Other Rejected",
                 "full_data": item,
             }
@@ -225,7 +252,7 @@ def display_copyleaks_table(df, title):
             # Only apply color to numeric values
             if not isinstance(val, (int, float)):
                 return ""
-            
+
             if col == "probability":
                 if val >= 0.9:
                     return "background-color: rgba(255, 0, 0, 0.2)"  # Light red
@@ -242,9 +269,9 @@ def display_copyleaks_table(df, title):
                     return "background-color: rgba(0, 255, 0, 0.2)"
 
         # Apply styling to the DataFrame
-        styled_df = df[["title", "link", "probability", "classification_text"]].style.apply(
-            lambda x: [color_score(v, x.name) for v in x], axis=0
-        )
+        styled_df = df[
+            ["title", "link", "probability", "classification_text"]
+        ].style.apply(lambda x: [color_score(v, x.name) for v in x], axis=0)
 
         # Display the styled table with clickable links
         state = st.dataframe(

@@ -34,6 +34,12 @@ def parse_args():
         default=os.getenv("DETECTOR_API", "sapling").lower(),
         help="Select which API to use for detection",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=10,
+        help="Number of posts to process (default: 10)",
+    )
     return parser.parse_args()
 
 
@@ -79,7 +85,7 @@ def requests_retry_session(
     retries=3,
     backoff_factor=0.3,
     backoff_max=120,
-    status_forcelist=(500, 502, 504),
+    status_forcelist=(500, 502, 504, 429),
     session=None,
 ):
     session = session or requests.Session()
@@ -111,12 +117,7 @@ def analyze_text_sapling(text: str) -> Dict[str, Any]:
 
     data = {"key": SAPLING_API_KEY, "text": text, "sent_scores": True}
 
-    session = requests_retry_session(
-        retries=10,
-        backoff_factor=5,
-        backoff_max=300,
-        status_forcelist=(500, 502, 504, 429),
-    )
+    session = requests_retry_session()
     try:
         response = session.post(SAPLING_API_URL, headers=headers, json=data)
         response.raise_for_status()
@@ -277,7 +278,7 @@ def main():
         "raw_data/accepted_posts.json",
         f"step_3_check_APIs/results/accepted_posts_analysis_{DETECTOR_API}.json",
         "accepted",
-        limit=10,
+        limit=args.limit,
     )
 
     # Process LLM rejected posts
@@ -285,7 +286,7 @@ def main():
         "step_0_data_processing/llm_rejected_posts.json",
         f"step_3_check_APIs/results/llm_rejected_posts_analysis_{DETECTOR_API}.json",
         "llm_rejected",
-        limit=10,
+        limit=args.limit,
     )
 
     # Process other rejected posts
@@ -293,7 +294,7 @@ def main():
         "step_0_data_processing/other_rejected_posts.json",
         f"step_3_check_APIs/results/other_rejected_posts_analysis_{DETECTOR_API}.json",
         "other_rejected",
-        limit=10,
+        limit=args.limit,
     )
 
 
