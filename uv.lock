@@ -111,6 +111,17 @@ wheels = [
 ]
 
 [[package]]
+name = "copyleaks"
+version = "4.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dateutil" },
+    { name = "pytz" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/51/20/395c01b7c6a3013f65a7db0fc55580c826e3853e7a885652d22252a7c9b1/copyleaks-4.3.0.tar.gz", hash = "sha256:4d220da85a6ec423a3f8e2cd12e0abff98eabb356781c98b49102e57fa0cbeaf", size = 18446 }
+
+[[package]]
 name = "gitdb"
 version = "4.0.12"
 source = { registry = "https://pypi.org/simple" }
@@ -187,6 +198,7 @@ name = "lesswrong-llm-detection-experiment"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "copyleaks" },
     { name = "mypy" },
     { name = "pandas-stubs" },
     { name = "python-dotenv" },
@@ -199,6 +211,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "copyleaks", specifier = ">=4.3.0" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
     { name = "python-dotenv", specifier = ">=1.1.0" },

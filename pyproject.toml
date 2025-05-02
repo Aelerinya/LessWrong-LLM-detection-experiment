@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "copyleaks>=4.3.0",
     "mypy>=1.15.0",
     "pandas-stubs>=2.2.3.250308",
     "python-dotenv>=1.1.0",
